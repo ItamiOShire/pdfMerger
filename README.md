@@ -16,7 +16,7 @@ System składa się z dwóch głównych komponentów:
 
 Całość opisana jest w modelu **C4** (System Context, Container, Component) przy użyciu **Structurizr DSL**.
 
-## 🚀 Funkcjonalności
+## Funkcjonalności
 
 | Funkcjonalność | Opis | Usługa GCP |
 |----------------|------|-------------|
