@@ -9,12 +9,11 @@ System składa się z dwóch głównych komponentów:
 -  **Cloud Function (serverless)** – przyjmuje żądanie HTTP z listą plików PDF i umieszcza zadanie w kolejce Pub/Sub,
 -  **Spring Boot Worker (Compute Engine VM)** – odbiera zadania z Pub/Sub, scala pliki PDF i zapisuje wynik w Google Cloud Storage.
 
----
 
 ##  Architektura systemu
 
 
-Całość opisana jest w modelu **C4** (System Context, Container, Component) przy użyciu **Structurizr DSL**.
+Całość opisana jest w modelu **C4** przy użyciu **Structurizr DSL**.
 
 ## Funkcjonalności
 
@@ -32,10 +31,10 @@ Całość opisana jest w modelu **C4** (System Context, Container, Component) pr
 
 **Backend:**
 - Java 17
-- Spring Boot 3
+- Spring Boot 3.5.9
 - Apache PDFBox
 - Google Cloud SDK for Java (Pub/Sub, Storage)
 
 **Infrastruktura:**
-- Terraform (tworzenie zasobów GCP)
+- Terraform
 - GCP: Cloud Functions, Pub/Sub, Compute Engine, Cloud Storage, Logging
