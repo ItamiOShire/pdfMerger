@@ -13,7 +13,11 @@ System składa się z dwóch głównych komponentów:
 ##  Architektura systemu
 
 
-Całość opisana jest w modelu **C4** przy użyciu **Structurizr DSL**.
+Całość opisana jest w modelu **C4** przy użyciu **Structurizr DSL** na pozomie 3.
+
+![system context](images/SystemContext-001-dark.svg)
+![container](images/Container-001-dark.svg)
+![component](images/Component-001-dark.svg)
 
 ## Funkcjonalności
 
@@ -26,6 +30,12 @@ Całość opisana jest w modelu **C4** przy użyciu **Structurizr DSL**.
 | **Monitorowanie i logi** | Rejestruje metryki i logi działania |  Cloud Logging & Monitoring |
 | **Infrastructure as Code (IaC)** | Pełna infrastruktura zarządzana przez Terraform |  Terraform |
 
+## Jak to ma działać
+
+1. Użytkownik wysyła żądanie HTTP do Cloud Function
+2. Cloud Function publikuje wiadomość Pub/Sub (`pdf-merge-topic`).
+3. Worker (uruchomiony na VM) odbiera wiadomość, ściąga wskazane pliki z Cloud Storage, scala je i zapisuje wynikowy PDF.
+4. Logi trafiają automatycznie do Cloud Logging, a stan zasobów monitorowany jest przez Cloud Monitoring.
 
 ##  Użyte technologie
 
