@@ -30,6 +30,12 @@
             <artifactId>google-cloud-storage</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-monitoring</artifactId>
+            <version>3.25.0</version>
+        </dependency>
+
         <!-- Apache PDFBox (scalanie PDF) -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
