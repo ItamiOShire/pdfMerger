@@ -8,6 +8,10 @@ import com.google.monitoring.v3.ProjectName;
 import com.google.monitoring.v3.TimeSeries;
 import com.google.monitoring.v3.TypedValue;
 import com.google.protobuf.Timestamp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
@@ -15,23 +19,24 @@ import java.util.Collections;
 public class MetricService {
 
     private static final String PROJECT_ID = System.getenv("GCP_PROJECT");
+    private static final Logger logger = LoggerFactory.getLogger(MetricService.class);
 
     public static void incrementMergedPdfCount() {
         try (MetricServiceClient client = MetricServiceClient.create()) {
 
-            // Definicja metryki
             Metric metric = Metric.newBuilder()
                     .setType("custom.googleapis.com/pdf_merger/merged_pdfs_count")
                     .build();
 
-            // Określenie zasobu (Compute Engine VM)
+            String instanceId = GcpMetadataUtil.getInstanceId();
+            String zone = GcpMetadataUtil.getZone();
+
             MonitoredResource resource = MonitoredResource.newBuilder()
                     .setType("gce_instance")
-                    .putLabels("instance_id", "1234567890123456789") // lub pobrać dynamicznie z metadata server
-                    .putLabels("zone", "europe-central2-a")
+                    .putLabels("instance_id", instanceId)
+                    .putLabels("zone", zone)
                     .build();
 
-            // Punkt danych (1 merge)
             Point point = Point.newBuilder()
                     .setInterval(
                             com.google.monitoring.v3.TimeInterval.newBuilder()
@@ -49,12 +54,15 @@ public class MetricService {
                     .addPoints(point)
                     .build();
 
-            // Wysłanie danych do Cloud Monitoring
             client.createTimeSeries(ProjectName.of(PROJECT_ID), Collections.singletonList(timeSeries));
 
-            System.out.println("📈 Metric 'merged_pdfs_count' incremented.");
+            logger.info("Metric 'merged_pdfs_count' incremented.");
+
+            System.out.println(" Metric 'merged_pdfs_count' incremented.");
+
 
         } catch (IOException e) {
+            logger.error("Error incrementing metric 'merged_pdfs_count'", e);
             e.printStackTrace();
         }
     }

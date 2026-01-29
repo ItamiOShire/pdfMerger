@@ -19,6 +19,17 @@
             <version>1.1.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.25.1</version>
+        </dependency>
+
         <!-- Pub/Sub klient -->
         <dependency>
             <groupId>com.google.cloud</groupId>
@@ -34,7 +45,43 @@
 
     <build>
         <plugins>
-            <!-- Plugin do Cloud Functions -->
+            <!-- Budowanie JAR z wszystkimi zależnościami -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+
+                            <!-- 🧹 usuń wszystkie pliki podpisów z META-INF -->
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.example.function.PdfMergeFunction</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Framework Cloud Functions -->
             <plugin>
                 <groupId>com.google.cloud.functions</groupId>
                 <artifactId>function-maven-plugin</artifactId>
@@ -45,4 +92,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
