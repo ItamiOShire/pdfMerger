@@ -47,6 +47,7 @@ resource "google_compute_instance" "pdf_worker_vm" {
   }
 
   metadata = {
+    google-logging-enabled = "true"
     gce-container-declaration = <<-EOT
       spec:
         containers:
