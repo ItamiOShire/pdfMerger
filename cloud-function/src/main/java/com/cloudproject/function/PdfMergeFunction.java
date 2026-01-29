@@ -1,5 +1,8 @@
 package com.cloudproject.function;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import com.google.cloud.functions.HttpFunction;
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
@@ -13,8 +16,9 @@ import java.util.concurrent.TimeUnit;
 
 public class PdfMergeFunction implements HttpFunction {
 
-    private static final String PROJECT_ID = System.getenv("GCP_PROJECT");
-    private static final String TOPIC_ID = "pdf-merge-topic";
+    private static final String PROJECT_ID = System.getenv("PROJECT_ID");
+    private static final String TOPIC_ID = System.getenv("TOPIC_NAME");
+    private static final Logger logger = LoggerFactory.getLogger(PdfMergeFunction.class );
 
     @Override
     public void service(HttpRequest request, HttpResponse response) throws Exception {
@@ -47,6 +51,7 @@ public class PdfMergeFunction implements HttpFunction {
         }
 
         response.setStatusCode(200);
+        logger.info("Queued merge job for: {}", messageData);
         writer.write("Queued merge job for: " + messageData);
     }
 }
